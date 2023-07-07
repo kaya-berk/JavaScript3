@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Zamanlayıcı Uygulaması</title>
+  <style>
+    body {
+      background-color: #fff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 24px;
+    }
+    #countdown {
+      font-weight: bold;
+      color: #000;
+    }
+    .finished {
+      background-color: pink;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zamanlayıcı Uygulaması</h1>
+  <div>
+    <label for="hours">Saat:</label>
+    <input type="number" id="hours" min="0" max="23" placeholder="00" />:
+    <label for="minutes">Dakika:</label>
+    <input type="number" id="minutes" min="0" max="59" placeholder="00" />:
+    <label for="seconds">Saniye:</label>
+    <input type="number" id="seconds" min="0" max="59" placeholder="00" />
+  </div>
+  <br>
+  <button onclick="startCountdown()">Başlat</button>
+  <button onclick="stopCountdown()">Durdur</button>
+  <div id="countdown"></div>
+</body>
+</html>
+
+  <script>
+ var countdownInterval;
+
+function startCountdown() {
+  var countdownElement = document.getElementById('countdown');
+  var bodyElement = document.body;
+
+  // Geri sayım süresini al
+  var hours = parseInt(document.getElementById('hours').value) || 0;
+  var minutes = parseInt(document.getElementById('minutes').value) || 0;
+  var seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+  // Yeni geri sayım süresi girildiğinde veya durdurulduğunda ekranı beyaza döndürmek için CSS'i güncelle
+  bodyElement.classList.remove('finished');
+
+  // Bitiş zamanını hesapla
+  var endTime = new Date();
+  endTime.setHours(endTime.getHours() + hours);
+  endTime.setMinutes(endTime.getMinutes() + minutes);
+  endTime.setSeconds(endTime.getSeconds() + seconds);
+
+  // Zamanlayıcıyı başlat
+  countdownInterval = setInterval(function() {
+    var currentTime = new Date();
+    var timeLeft = endTime - currentTime;
+
+    if (timeLeft < 0) {
+      // Geri sayım tamamlandığında süreyi 0 olarak göster
+      clearInterval(countdownInterval);
+      countdownElement.innerHTML = "00:00:00";
+      bodyElement.classList.add('finished');
+    } else {
+      var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      // Geri sayım süresini güncelle
+      countdownElement.innerHTML = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+    }
+  }, 1000);
+
+  function formatTime(time) {
+    return time < 10 ? "0" + time : time;
+  }
+}
+
+function stopCountdown() {
+  clearInterval(countdownInterval);
+  document.body.classList.remove('finished'); // Geri sayım durdurulduğunda ekranı beyaza döndür
+}
+  </script>
+</body>
+</html>
